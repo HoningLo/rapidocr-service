@@ -33,11 +33,11 @@ clean:  ## Clean temporary files
 	rm -rf temp/*
 	rm -rf logs/*
 
-run:  ## Run the application
-	uv run python -m uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
+run:  ## Run the application in development mode
+	uv run uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 run-prod:  ## Run in production mode
-	uv run python -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+	uv run uvicorn app.main:app --host 0.0.0.0 --port 80
 
 docker-build:  ## Build Docker image
 	docker build -t rapidocr-service .

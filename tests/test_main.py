@@ -49,7 +49,7 @@ class TestHealthEndpoints:
 
     def test_stats_endpoint(self) -> None:
         """Test the stats endpoint."""
-        response = client.get("/stats")
+        response = client.get("/health/stats")
         assert response.status_code == 200
         data = response.json()
         assert "service" in data
