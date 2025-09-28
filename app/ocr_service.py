@@ -4,7 +4,7 @@ import time
 from pathlib import Path
 from typing import Any
 
-from rapidocr_onnxruntime import RapidOCR
+from rapidocr import RapidOCR
 
 from .config import settings
 from .gpu_utils import gpu_detector
