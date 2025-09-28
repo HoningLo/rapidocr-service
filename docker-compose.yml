@@ -1,0 +1,25 @@
+# Docker Compose for RapidOCR Service
+version: '3.8'
+
+services:
+  rapidocr-service:
+    build: .
+    ports:
+      - "8000:80"
+    environment:
+      - LOG_LEVEL=INFO
+      - TEMP_DIR=/home/rapidocr/temp
+      - MAX_FILE_SIZE=10485760
+      - MAX_FILES=10
+      - CLEANUP_INTERVAL=300
+      - FILE_RETENTION=3600
+    volumes:
+      - ./temp:/home/rapidocr/temp
+      - ./logs:/home/rapidocr/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:80/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

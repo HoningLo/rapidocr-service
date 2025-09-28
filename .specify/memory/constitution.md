@@ -1,50 +1,55 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+<!--
+Sync Impact Report:
+Version change: Initial → 1.0.0
+Modified principles:
+- Added: I. API-First Design
+- Added: II. Performance & GPU Optimization
+- Added: III. Comprehensive Logging
+- Added: IV. Robust File Management
+- Added: V. Data Integrity & Traceability
+Templates requiring updates: ✅ constitution updated
+Follow-up TODOs: None
+-->
+
+# RapidOCR Service Constitution
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### I. API-First Design
+The service MUST expose all OCR functionality through a clean RESTful API. FastAPI framework is mandatory for type safety, automatic documentation, and async support. All endpoints MUST accept multiple file formats and return standardized JSON responses. API versioning is required for backward compatibility.
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+**Rationale**: Ensures consistent interface for clients and enables easy integration with other services.
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### II. Performance & GPU Optimization
+The service MUST check for GPU availability at startup and utilize hardware acceleration when possible. CPU fallback is required when GPU is unavailable. All performance metrics MUST be logged. Resource usage monitoring is mandatory to prevent memory leaks.
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+**Rationale**: OCR processing is computationally intensive; GPU acceleration significantly improves throughput and user experience.
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### III. Comprehensive Logging (NON-NEGOTIABLE)
+Structured logging is mandatory for all operations: request tracking, file processing, OCR execution, errors, and performance metrics. Each request MUST have a unique identifier. Log levels MUST be configurable. Sensitive data MUST NOT be logged.
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+**Rationale**: Essential for debugging, monitoring, audit trails, and production support.
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### IV. Robust File Management
+All uploaded files MUST be assigned UUIDs and stored in a dedicated temp directory with automatic cleanup. File validation is required before processing. Storage quotas and retention policies MUST be enforced to prevent disk exhaustion.
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+**Rationale**: Prevents file conflicts, enables traceability, and ensures system stability through proper resource management.
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### V. Data Integrity & Traceability
+Every OCR operation MUST maintain a complete audit trail linking input files (by UUID) to output results. Results MUST be serializable and include metadata (filename, UUID, processing time). Data validation is required at all boundaries.
+
+**Rationale**: Enables debugging, quality assurance, and provides accountability for OCR results.
+
+## Technology Standards
+
+All components MUST use Python 3.13+ with uv for dependency management. FastAPI for API framework, RapidOCR for OCR processing, and Pydantic for data validation are mandatory. Docker containerization is required for deployment. Environment-specific configurations MUST be externalized.
+
+## Development Workflow
+
+Test-driven development is mandatory for all new features. Code coverage MUST be maintained above 80%. All API endpoints MUST have integration tests. Performance benchmarks are required for OCR operations. Code reviews MUST verify compliance with all principles.
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+This constitution supersedes all other development practices. Any amendments require documentation of impact analysis and migration plan. All code changes MUST be verified against these principles during review. Violations MUST be addressed before merge approval.
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+**Version**: 1.0.0 | **Ratified**: 2025-09-21 | **Last Amended**: 2025-09-21
