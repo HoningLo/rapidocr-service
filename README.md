@@ -74,11 +74,12 @@ curl -X POST "http://localhost:8000/ocr" \
 ]
 ```
 
-## API Documentation
+## 📚 Documentation
 
-Once running, visit:
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
+- **完整文檔**: 請參閱 [docs/](./docs/) 目錄獲取詳細文檔
+- **API 文檔**:
+  - Swagger UI: http://localhost:8000/docs
+  - ReDoc: http://localhost:8000/redoc
 
 ## Development
 
