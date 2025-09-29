@@ -1,16 +1,17 @@
 # Multi-stage Docker build for RapidOCR Service using UV
 FROM python:3.13-slim
 
-# Install system dependencies for runtime
+# Install system dependencies for runtime and GPU support
 RUN apt-get update && apt-get install -y \
-    libgl1-mesa-glx \
+    libgl1 \
     libglib2.0-0 \
     libsm6 \
     libxext6 \
-    libxrender-dev \
+    libxrender1 \
     libgomp1 \
-    libgcc-s1 \
     curl \
+    wget \
+    gnupg2 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install uv
@@ -42,7 +43,7 @@ EXPOSE 80
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:80/health || exit 1
+    CMD curl -f http://localhost:80/health/ || exit 1
 
 # Run the application using uvicorn
 CMD ["/app/.venv/bin/python", "-m", "uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]

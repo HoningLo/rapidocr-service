@@ -94,19 +94,43 @@ class GPUDetector(LoggingMixin):
 
     def configure_for_gpu(self) -> dict[str, Any]:
         """Configure environment variables for GPU usage."""
+        # Check for forced CPU usage
+        force_cpu = os.getenv("FORCE_CPU", "").lower() in ("true", "1", "yes")
+
+        if force_cpu:
+            self.log_info("GPU usage disabled by FORCE_CPU environment variable")
+            return {"use_cpu": True, "providers": ["CPUExecutionProvider"]}
+
         config = {}
 
         if self.detect_gpu():
             # Set environment variables for GPU usage
             if "CUDA" in (self._gpu_info or ""):
-                config["use_cuda"] = True
-                os.environ["CUDA_VISIBLE_DEVICES"] = "0"  # Use first GPU
+                config.update(
+                    {
+                        "use_cuda": True,
+                        "use_cpu": False,
+                        "providers": ["CUDAExecutionProvider", "CPUExecutionProvider"],
+                    }
+                )
+                # Set CUDA environment variables if not already set
+                if "CUDA_VISIBLE_DEVICES" not in os.environ:
+                    os.environ["CUDA_VISIBLE_DEVICES"] = "0"  # Use first GPU
+                self.log_info("Configured for CUDA GPU acceleration", config=config)
             elif "OpenCL" in (self._gpu_info or ""):
-                config["use_opencl"] = True
-
-            self.log_info("Configured for GPU acceleration", config=config)
+                config.update(
+                    {
+                        "use_opencl": True,
+                        "use_cpu": False,
+                        "providers": [
+                            "OpenCLExecutionProvider",
+                            "CPUExecutionProvider",
+                        ],
+                    }
+                )
+                self.log_info("Configured for OpenCL GPU acceleration", config=config)
         else:
-            config["use_cpu"] = True
+            config.update({"use_cpu": True, "providers": ["CPUExecutionProvider"]})
             self.log_info("Configured for CPU processing")
 
         return config

@@ -1,11 +1,18 @@
 # Docker Compose for RapidOCR Service
-version: '3.8'
 
 services:
   rapidocr-service:
     build: .
     ports:
       - "8000:80"
+    # GPU support configuration
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
     environment:
       - LOG_LEVEL=INFO
       - TEMP_DIR=/home/rapidocr/temp
@@ -13,6 +20,10 @@ services:
       - MAX_FILES=10
       - CLEANUP_INTERVAL=300
       - FILE_RETENTION=3600
+      # GPU environment variables
+      - NVIDIA_VISIBLE_DEVICES=all
+      - NVIDIA_DRIVER_CAPABILITIES=compute,utility
+      - CUDA_VISIBLE_DEVICES=all
     volumes:
       - ./temp:/home/rapidocr/temp
       - ./logs:/home/rapidocr/logs
@@ -23,3 +34,18 @@ services:
       timeout: 10s
       retries: 3
       start_period: 40s
+    develop:
+      # Create a `watch` configuration to update the app
+      #
+      watch:
+        # Sync the working directory with the `/app` directory in the container
+        - action: sync
+          path: .
+          target: /app
+          # Exclude the project virtual environment
+          ignore:
+            - .venv/
+
+        # Rebuild the image on changes to the `pyproject.toml`
+        - action: rebuild
+          path: ./pyproject.toml
