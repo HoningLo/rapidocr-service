@@ -24,12 +24,12 @@ COPY . /app
 WORKDIR /app
 RUN uv sync --frozen --no-cache
 
-# Create non-root user
-RUN useradd --create-home --shell /bin/bash rapidocr
-USER rapidocr
+# Create necessary directories and non-root user
+RUN mkdir -p /app/temp /app/logs && \
+    useradd --create-home --shell /bin/bash rapidocr && \
+    chown -R rapidocr:rapidocr /app
 
-# Create necessary directories
-RUN mkdir -p /app/temp /app/logs
+USER rapidocr
 
 # Set environment variables
 ENV PYTHONPATH=/app
