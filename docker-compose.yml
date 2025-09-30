@@ -4,7 +4,7 @@ services:
   rapidocr-service:
     build: .
     ports:
-      - "8000:80"
+      - "8200:80"
     # GPU support configuration
     deploy:
       resources:
