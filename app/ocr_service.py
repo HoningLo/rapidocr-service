@@ -92,19 +92,12 @@ class OCRService(LoggingMixin):
             result = self._ocr_engine(str(file_path))
 
             # Extract text from result
-            # RapidOCR returns format: (detection_results, timing_info) or None
-            # detection_results is a list of [[[bbox], text, confidence], ...]
+            # RapidOCR now returns a RapidOCROutput object with txts attribute
             extracted_text = ""
 
-            if result and len(result) >= 1 and result[0]:
-                # result[0] contains the detection results
-                detection_results = result[0]
-                text_lines = []
-
-                for item in detection_results:
-                    if len(item) >= 2 and item[1]:  # item[1] is the text
-                        text_lines.append(str(item[1]).strip())
-
+            if result and hasattr(result, 'txts') and result.txts:
+                # result.txts contains the extracted text lines as tuple
+                text_lines = [str(text).strip() for text in result.txts if text]
                 extracted_text = "\n".join(text_lines)
 
             processing_time = time.time() - start_time
